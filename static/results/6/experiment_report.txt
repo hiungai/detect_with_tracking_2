@@ -1,0 +1,18 @@
+=== KẾT QUẢ THỰC NGHIỆM ===
+Video: uploads\6.mp4
+Mô hình: yolov8n.pt
+Tổng số khung hình: 300
+Kích thước khung hình: 1280x720
+Tốc độ khung hình (FPS): 30
+Đối tượng phát hiện:
+ - car: 25 object
+ - person: 14 object
+ - bus: 11 object
+ - truck: 3 object
+ - traffic light: 13 object
+ - train: 4 object
+ - bicycle: 4 object
+
+=== THAM SỐ THỰC NGHIỆM ===
+Confidence threshold: mặc định
+Thiết bị sử dụng: CPU
