@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Phát hiện & Theo dõi đối tượng</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+    input[type="file"] { margin: 20px 0; }
+    video, img { max-width: 80%; margin-top: 20px; }
+    pre {
+      text-align: left;
+      background: #f4f4f4;
+      padding: 15px;
+      border-radius: 8px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      max-width: 90%;
+      margin: 20px auto;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🚗 Phát hiện & Theo dõi đối tượng từ video</h1>
+
+  <form id="upload-form" enctype="multipart/form-data">
+    <input type="file" id="video-file" name="video" accept="video/mp4" required />
+    <br />
+    <button type="submit">Tải lên & Xử lý</button>
+  </form>
+
+  <div id="status" style="margin-top: 20px; font-weight: bold;"></div>
+
+  <div id="result-section" style="display: none;">
+    <h2>Kết quả xử lý</h2>
+    
+    <video id="result-video" controls></video>
+
+    <h3>📊 Biểu đồ Histogram</h3>
+    <img id="hist1" alt="Biểu đồ xuất hiện đối tượng theo frame" />
+    <img id="hist2" alt="Biểu đồ số object duy nhất" />
+    <img id="hist3" alt="Biểu đồ độ tin cậy mô hình" />
+
+    <h3>📄 Báo cáo thực nghiệm</h3>
+    <pre id="report-text">Đang tải nội dung...</pre>
+  </div>
+
+  <script>
+    const form = document.getElementById("upload-form");
+    const statusDiv = document.getElementById("status");
+    const resultSection = document.getElementById("result-section");
+    const resultVideo = document.getElementById("result-video");
+    const hist1 = document.getElementById("hist1");
+    const hist2 = document.getElementById("hist2");
+    const hist3 = document.getElementById("hist3");
+    const reportText = document.getElementById("report-text");
+
+    form.onsubmit = async (e) => {
+      e.preventDefault();
+      statusDiv.innerHTML = "⏳ Đang xử lý video, vui lòng đợi...";
+      resultSection.style.display = "none";
+
+      const formData = new FormData(form);
+      const response = await fetch("/process", {
+        method: "POST",
+        body: formData
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        resultVideo.src = data.video_url;
+        hist1.src = data.histograms[0];
+        hist2.src = data.histograms[1];
+        hist3.src = data.histograms[2];
+        reportText.textContent = data.report_text;
+
+        resultSection.style.display = "block";
+        statusDiv.innerHTML = "✅ Hoàn tất xử lý! Xem kết quả bên dưới.";
+      } else {
+        statusDiv.innerHTML = "❌ Lỗi xử lý video.";
+      }
+    };
+  </script>
+</body>
+</html>
