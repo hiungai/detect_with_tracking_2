@@ -42,7 +42,7 @@ def process_video():
         video.save(input_path)
         try:
             subprocess.run([
-                "python", "detect_with_tracking.py",
+                "python", "detect_with_tracking_2.py",
                 "--video_path", input_path,
                 "--output", output_video_path
             ], check=True)
